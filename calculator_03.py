@@ -8,13 +8,13 @@ def calculator(str):
     get_postfix = generator_postfix(str)
     numbers = []
 
-    for dt in get_postfix:
-        if dt.isdigit():
-            numbers.append(dt)
+    for item in get_postfix:
+        if item.isdigit():
+            numbers.append(item)
         else:
             y = int(numbers.pop())
             x = int(numbers.pop())
-            numbers.append(formula(dt)(x, y))
+            numbers.append(formula(item)(x, y))
 
     return numbers[0]
 
@@ -25,25 +25,25 @@ def generator_postfix(str):
     postfix_stack = []
     oper_stack = []
 
-    for dt in str.replace(' ', ''):
-        if dt.isdigit():
-            postfix_stack.append(dt)
+    for item in str.replace(' ', ''):
+        if item.isdigit():
+            postfix_stack.append(item)
 
         else:
             if len(oper_stack) == 0:
-                oper_stack.append(dt)
+                oper_stack.append(item)
 
-            elif oper_priority(oper_stack[-1]) < oper_priority(dt):
-                oper_stack.append(dt)
+            elif oper_priority(oper_stack[-1]) < oper_priority(item):
+                oper_stack.append(item)
 
-            elif oper_priority(oper_stack[-1]) == oper_priority(dt):
+            elif oper_priority(oper_stack[-1]) == oper_priority(item):
                 postfix_stack.append(oper_stack.pop())
-                oper_stack.append(dt)
+                oper_stack.append(item)
 
-            elif oper_priority(oper_stack[-1]) > oper_priority(dt):
+            elif oper_priority(oper_stack[-1]) > oper_priority(item):
                 while oper_stack:
                     postfix_stack.append(oper_stack.pop())
-                oper_stack.append(dt)
+                oper_stack.append(item)
 
     if '*' in oper_stack or '%' in oper_stack:
         while oper_stack:
