@@ -37,7 +37,9 @@ if __name__ == '__main__':
         '3-1',
         '4- 1',
         '5 +1',
+        '5 * 2',
+        '8/ 2',
     ]
     for e in example:
         result = calculator(e)
-        print('calculation result : {} = {}'.format(e, result))
+        print('calculation result : {} = {}({})'.format(e, int(result), result))
