@@ -25,62 +25,48 @@ def generator_postfix(str):
     postfix_stack = []
     oper_stack = []
 
-    for item in str.replace(' ', ''):
-
+    for idx, item in enumerate(str.replace(' ', '')):
         if item.isdigit():
             postfix_stack.append(item)
 
         else:
             if len(oper_stack) == 0:
                 oper_stack.append(item)
-
-            elif oper_stack[-1] == '(':
-                oper_stack.append(item)
-
+            
             elif oper_priority(item) > oper_priority(oper_stack[-1]):
-                oper_stack.append(item)
+                if ')' is not item:
+                    oper_stack.append(item)
 
-            elif oper_priority(oper_stack[-1]) == oper_priority(item):
+            elif oper_priority(item) < oper_priority(oper_stack[-1]):
+                if ')' is not item:
+                    while oper_stack:
+                        value = oper_stack.pop()
+                        postfix_stack.append(value)
+                    oper_stack.append(item)
+
+                if ')' is item:
+                    while oper_stack:
+                        value = oper_stack.pop()
+                        if '(' is value:
+                            break
+                        postfix_stack.append(value)
+
+            elif oper_priority(item) == oper_priority(oper_stack[-1]):
                 postfix_stack.append(oper_stack.pop())
                 oper_stack.append(item)
 
-            elif oper_priority(item) < oper_priority(oper_stack[-1]):
-                if '(' == oper_stack[-1]:
-                    oper_stack.append(item)
-
-                while oper_stack:
-                    postfix_stack.append(oper_stack.pop())
-
-                if item != ')':
-                    oper_stack.append(item)
-
     if '*' in oper_stack or '/' in oper_stack:
-        if '(' in oper_stack:
-            oper_stack.remove('(')
-
-        if '(' in postfix_stack:
-            postfix_stack.remove('(')
-
         while oper_stack:
             value = oper_stack.pop()
-            if '(' != value:
-                postfix_stack.append(value)
-        oper_stack = []
+            postfix_stack.append(value)
 
-    else:
-        if '(' in oper_stack:
-            oper_stack.remove('(')
-
-        if '(' in postfix_stack:
-            postfix_stack.remove('(')
-
+    elif '+' in oper_stack or '-' in oper_stack:
         while oper_stack:
-            value = oper_stack.pop(0)
-            if ')' != value:
-                postfix_stack.append(value)
-        oper_stack = []
+            value = oper_stack.pop()
+            postfix_stack.append(value)
 
-    print(''.join(postfix_stack))
+    print(oper_stack)
+    print(postfix_stack)
     return postfix_stack
 
 
@@ -110,11 +96,10 @@ def formula(opr):
 if __name__ == '__main__':
     example = [
         # '((4+2)/4) - (3+2/(7*5))',
-        # '(3+2/(7*5))',
-        # '((4 + 2) / 4',
-        '(1+2*3)/4',
-        '(1*2+3)/4',
-        '9-5-5*2-2*9',
+        '3+2/(7*5)',
+        # '(1+2*3)/4',
+        # '(1*2+3)/4',
+        # '9-5-5*2-2*9',
         # '1*2+3',
         # '1+2*3',
         # '1+1 + 1',
