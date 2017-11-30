@@ -29,8 +29,7 @@ def generator_postfix(str):
 
     for idx, item in enumerate(target):
         if item.isdigit():
-            if ')' is not item:
-                postfix_stack.append(item)
+            postfix_stack.append(item)
 
         else:
             new_item = oper_priority(item)
@@ -54,47 +53,34 @@ def generator_postfix(str):
                     oper_stack.append(item)
 
             elif new_item < oper_priority(oper_stack[-1]):
-                    if '(' in oper_stack:
-                        if ')' is not item:
-                            if '(' is item:
-                                oper_stack.append(item)
-                            else:
-                                while oper_stack:
-                                    value = oper_stack.pop()
-                                    if '(' is value:
-                                        oper_stack.append(item)
-                                        break
-                                    postfix_stack.append(value)
-
-                        if ')' is item:
-                            while oper_stack:
-                                value = oper_stack.pop()
-                                if '(' is not value:
-                                    postfix_stack.append(value)
-
-                                if value == '(':
-                                    break
+                    if ')' is item:
+                        while oper_stack:
+                            value = oper_stack.pop()
+                            if '(' is value:
+                                break
+                            postfix_stack.append(value)
 
                     else:
                         if '(' is item:
                             oper_stack.append(item)
+
                         else:
                             while oper_stack:
                                 value = oper_stack.pop()
-                                postfix_stack.append(value)
+                                if '(' is value:
+                                    oper_stack.append(item)
+                                    break
 
-                            if ')' is not item:
-                                oper_stack.append(item)
+                                else:
+                                    postfix_stack.append(value)
+                                    if len(oper_stack) is 0:
+                                        oper_stack.append(item)
+                                        break
 
-    if '*' in oper_stack or '/' in oper_stack:
-        while oper_stack:
-            value = oper_stack.pop()
-            postfix_stack.append(value)
-
-    elif '+' in oper_stack or '-' in oper_stack:
-        while oper_stack:
-            value = oper_stack.pop()
-            postfix_stack.append(value)
+    if len(oper_stack) is not 0:
+            while oper_stack:
+                value = oper_stack.pop()
+                postfix_stack.append(value)
 
     return postfix_stack
 
